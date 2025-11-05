@@ -1,19 +1,15 @@
 class Node:
-    def __init__(self):
-        self.name = name
+    def __init__(self, name):
         self.color = None
+        self.name = name
 
     def set_color(self, new_color):
         self.color = new_color
 
-    #def __repr__(self):
-    #    return f"{self.name}(color={self.color})"
-
-
 class Graph():
     def __init__(self):
-        self.V = {} 
-        self.E = {}
+        self.V = []
+        self.E = []
 
     def add_vertex(self, new_vert):
         self.V.append(new_vert)
@@ -92,3 +88,29 @@ def k_color(graph, k):
             v.set_color(len(used_colors))  #should we make this an error?
 
     return graph
+
+
+G = Graph()
+A = Node('A')
+B = Node('B')
+C = Node('C')
+D = Node('D')
+E = Node('E')
+
+for node in [A, B, C, D, E]:
+    G.add_vertex(node)
+
+edges = [(A, B), (A, C), (B, C), (C, D), (D, E)]
+for n1, n2 in edges:
+    G.add_edge(n1, n2)
+
+# Run graph coloring
+k_color(G, k=3)
+
+# Print results
+print("Final coloring:")
+for v in G.V:
+    print(f"{v.name}: color {v.color}")
+
+#gets the same answer that I got on paper, I believe this is correct(may need to improve effieiency however)!
+
