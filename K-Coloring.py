@@ -85,7 +85,7 @@ def k_color(graph):
                     chromatic_num = color
                 break
 
-    return chromatic_num
+    return chromatic_num +1
 
         
         
