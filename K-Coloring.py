@@ -1,23 +1,22 @@
-class Node():
-    def __init__(self):
-        self.color = 0
+class Node:
+    def __init__(self, name):
+        self.color = None
+        self.name = name
 
     def set_color(self, new_color):
         self.color = new_color
 
 class Graph():
     def __init__(self):
-        self.V = {}
-        self.E = {}
+        self.V = []
+        self.E = []
 
     def add_vertex(self, new_vert):
         self.V.append(new_vert)
 
     def add_edge(self, edge1, edge2):
-        if(edge1 not in self.V or edge2 not in self.V):
-            IndexError("Edge not in graph")
-            return -1
-        
+        if edge1 not in self.V or edge2 not in self.V:
+            raise IndexError("Edge not in graph")
         self.E.append((edge1, edge2))
         self.E.append((edge2, edge1))
 
@@ -30,41 +29,88 @@ class Graph():
                 neighbors.append(edge[0])
 
         return neighbors
-                
 
-def heapsort(L):
-    """sorts list into a minmum priority heap based off of number of edges (degree)"""
+    def remove_vertex(self, vertex):
+        # remove vertex and all its edges
+        self.V.remove(vertex)
+        self.E = [e for e in self.E if vertex not in e]
 
-def get_min(L):
-    """pops lowest priority, then maintains heap priority"""
-    L[0], L[len(L)-1] = L[len(L)-1], L[0]
-    min = L.pop()
-    downheap(L)
+    def degree(self, vertex):
+        return len(self.get_neighbors(vertex))
 
-    return min
+    def copy(self):
+        # copy of graph structure
+        new_g = Graph()
+        new_g.V = list(self.V)
+        new_g.E = list(self.E)
+        return new_g
+    
 
-def downheap(L):
-    """Maintains heap property"""
 
-def k_color(graph):
-    chromatic_num = 0
-    vert_weights = []
+def k_color(graph, k):
+    stack = []
+    temp_graph = graph.copy()
 
-    #put all vertex into a list with the degree
-    for vert in graph.V:
-        num_edges = 0
-        for edge in graph.E:
-            if(vert in edge):
-                num_edges = num_edges +1
-        
-        vert_weights.append((vert, num_edges))
+    #Simplification (remove vertices)
+    while temp_graph.V: #while we stil have vertices to chase
+        low_deg_vertex = None  #set min vertex and degree to none
+        min_degree = float('inf')
 
-    #sort the list into a min priority queue
-    heapsort(vert_weights)
+        for v in temp_graph.V:     #go through remaining vertices in insertion order
+            d = temp_graph.degree(v)  
+            if d < k:              #if vertex is less than k(# colors)
+                low_deg_vertex = v #set lowest vertex to it and remove it and stack it right away
+                break
+            elif d < min_degree:  #if we cannot find one less than k, choose the lowest and remove it anyway
+                low_deg_vertex = v
+                min_degree = d
+      #push the vertex with the lowest degree/degree < k onto the stack
+      #remove it and its edges from the graph
+      #do the same process until there are no vertices to put onto the stack
+        stack.append(low_deg_vertex)
+        temp_graph.remove_vertex(low_deg_vertex)
 
-    #pop elements, add them back to graph, choose color
-    while(vert_weights):
-        minimum = get_min(vert_weights)
-        color = 0
-        neighbors = graph.get_neighbors(minimum)
-        
+    #Coloring (reinsert vertices)
+    while stack:
+        v = stack.pop() #remove the last item in the stack
+        used_colors = set()  #all colors used
+
+        for neighbor in graph.get_neighbors(v): #takes all nieghboring colors, if a color is used in a neighbor adds it to the used set
+            if neighbor.color is not None: 
+                used_colors.add(neighbor.color)
+
+        # Assign lowest available color
+        for color in range(k):                 #colors are from 0 to k-1 in this case
+            if color not in used_colors:
+                v.set_color(color)              #makes color lowest color not used by the neighbors
+                break
+        else:
+            raise AssertionError('Object not colorable in 2 colors')
+            # If all colors are used, assign a new color (graph IS NOT k-colorable in this case)
+
+
+    color_map = {v.name:v.color for v in graph.V}
+    return color_map
+
+
+
+
+
+
+L = Graph()
+G = Graph()
+A = Node('A')
+B = Node('B')
+C = Node('C')
+D = Node('D')
+E = Node('E')
+
+for node in [A, B, C, D, E]:
+     G.add_vertex(node)
+
+edges = [(A, B), (A, C), (C, D), (B, C), (D, E), (B, D)]
+for n1, n2 in edges:
+    G.add_edge(n1, n2)
+
+# Run graph coloring
+print(k_color(G, k=3))
