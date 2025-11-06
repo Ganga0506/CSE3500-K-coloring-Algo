@@ -47,7 +47,8 @@ class Graph():
     
 
 
-def k_color(graph, k):
+def k_color(graph):
+    chromatic_num = 0
     stack = []
     temp_graph = graph.copy()
 
@@ -58,10 +59,7 @@ def k_color(graph, k):
 
         for v in temp_graph.V:     #go through remaining vertices in insertion order
             d = temp_graph.degree(v)  
-            if d < k:              #if vertex is less than k(# colors)
-                low_deg_vertex = v #set lowest vertex to it and remove it and stack it right away
-                break
-            elif d < min_degree:  #if we cannot find one less than k, choose the lowest and remove it anyway
+            if d < min_degree:  #if we cannot find one less than k, choose the lowest and remove it anyway
                 low_deg_vertex = v
                 min_degree = d
       #push the vertex with the lowest degree/degree < k onto the stack
@@ -70,7 +68,7 @@ def k_color(graph, k):
         stack.append(low_deg_vertex)
         temp_graph.remove_vertex(low_deg_vertex)
 
-    #Coloring (reinsert vertices)
+    #pop elements, add them back to graph, choose color
     while stack:
         v = stack.pop() #remove the last item in the stack
         used_colors = set()  #all colors used
@@ -80,37 +78,37 @@ def k_color(graph, k):
                 used_colors.add(neighbor.color)
 
         # Assign lowest available color
-        for color in range(k):                 #colors are from 0 to k-1 in this case
+        for color in range(len(graph.V)):                 #colors are from 0 to k-1 in this case
             if color not in used_colors:
                 v.set_color(color)              #makes color lowest color not used by the neighbors
+                if(color > chromatic_num):
+                    chromatic_num = color
                 break
-        else:
-            raise AssertionError('Object not colorable in 2 colors')
-            # If all colors are used, assign a new color (graph IS NOT k-colorable in this case)
 
+    return chromatic_num
 
-    color_map = {v.name:v.color for v in graph.V}
-    return color_map
+        
+        
+if __name__ == '__main__':
+    G = Graph()
+    A = Node('A')
+    B = Node('B')
+    C = Node('C')
+    D = Node('D')
+    E = Node('E')
 
+    for node in [A, B, C, D, E]:
+        G.add_vertex(node)
 
+    edges = [(A, B), (A, C), (B, C), (C, D), (D, E), (B, D)]
+    for n1, n2 in edges:
+        G.add_edge(n1, n2)
 
+    # Run graph coloring
+    chromatic = k_color(G)
+    print(chromatic)
 
-
-
-L = Graph()
-G = Graph()
-A = Node('A')
-B = Node('B')
-C = Node('C')
-D = Node('D')
-E = Node('E')
-
-for node in [A, B, C, D, E]:
-     G.add_vertex(node)
-
-edges = [(A, B), (A, C), (C, D), (B, C), (D, E), (B, D)]
-for n1, n2 in edges:
-    G.add_edge(n1, n2)
-
-# Run graph coloring
-print(k_color(G, k=3))
+    # Print results
+    print("Final coloring:")
+    for v in G.V:
+        print(f"{v.name}: color {v.color}")
