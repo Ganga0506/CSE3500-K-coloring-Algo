@@ -85,8 +85,8 @@ def k_color(graph, k):
                 break
         else:
             # If all colors are used, assign a new color (graph IS NOT k-colorable in this case)
-            v.set_color(len(used_colors))  #should we make this an error?
-
+            raise AssertionError(f"Graph is not colorable in {k} colors")
+        
     return graph
 
 
