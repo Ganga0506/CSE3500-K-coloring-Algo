@@ -85,3 +85,13 @@ def test_fixed_triangle_invalid():
         assert False, "Expected AssertionError for non-2-colorable graph"
     except AssertionError:
         pass
+
+    
+if __name__ == "__main__":
+    test_line_graph()
+    test_triangle()
+    test_square_with_diagonal()
+    test_K4()
+    test_fixed_triangle_valid()
+    test_fixed_triangle_invalid()
+    print("All tests passed!")
