@@ -89,28 +89,28 @@ def k_color(graph, k):
 
     return graph
 
-
-G = Graph()
-A = Node('A')
-B = Node('B')
-C = Node('C')
-D = Node('D')
-E = Node('E')
-
-for node in [A, B, C, D, E]:
-    G.add_vertex(node)
-
-edges = [(A, B), (A, C), (B, C), (C, D), (D, E)]
-for n1, n2 in edges:
-    G.add_edge(n1, n2)
-
-# Run graph coloring
-k_color(G, k=3)
-
-# Print results
-print("Final coloring:")
-for v in G.V:
-    print(f"{v.name}: color {v.color}")
-
-#gets the same answer that I got on paper, I believe this is correct(may need to improve effieiency however)!
+if __name__ == '__main__':
+    G = Graph()
+    A = Node('A')
+    B = Node('B')
+    C = Node('C')
+    D = Node('D')
+    E = Node('E')
+    
+    for node in [A, B, C, D, E]:
+        G.add_vertex(node)
+    
+    edges = [(A, B), (A, C), (B, C), (C, D), (D, E)]
+    for n1, n2 in edges:
+        G.add_edge(n1, n2)
+    
+    # Run graph coloring
+    k_color(G, k=3)
+    
+    # Print results
+    print("Final coloring:")
+    for v in G.V:
+        print(f"{v.name}: color {v.color}")
+    
+    #gets the same answer that I got on paper, I believe this is correct(may need to improve effieiency however)!
 
