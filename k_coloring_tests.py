@@ -1,4 +1,4 @@
-from general_case_k_coloring import Graph, Node, k_color as k_color_auto
+from general_case_k_coloring import Graph, Node, k_color as k_color_auto 
 from k_coloring import Graph as G2, Node as N2, k_color as k_color_fixed 
 
 # Test Case 1: Simple line graph (chromatic = 2)
@@ -85,6 +85,7 @@ def test_fixed_triangle_invalid():
         assert False, "Expected AssertionError for non-2-colorable graph"
     except AssertionError:
         pass
+
 
 if __name__ == "__main__":
     test_line_graph()
